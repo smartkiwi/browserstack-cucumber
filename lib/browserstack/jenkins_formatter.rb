@@ -1,3 +1,5 @@
+require "cucumber/formatter/junit"
+
 module BrowserStackCucumber
   class JenkinsFormatter < Cucumber::Formatter::Junit
     def initialize(step_mother, io, options)
