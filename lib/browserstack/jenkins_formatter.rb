@@ -26,7 +26,7 @@ module BrowserStackCucumber
 
     def job_url
       job_id = ENV['browser_session_url']
-      "Session url #{job_id}\n"
+      "Session url #{job_id}       <br>\n"
     end
 
   end
