@@ -26,7 +26,7 @@ See features/support/env.rb on how to add BrowserStack support to your cucumber 
 ```ruby
 require'rspec/expectations'
 require'page-object'
-require 'BrowserStack/browserstack.rb'
+require'browserstack'
 require'selenium/webdriver'
 
 World(PageObject::PageFactory)
