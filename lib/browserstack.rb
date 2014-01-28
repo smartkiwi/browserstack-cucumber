@@ -7,9 +7,9 @@ require 'browserstack/jenkins_formatter'
 # formatter can be used with --format browserstack_jenkins
 require 'cucumber/cli/main'
 
-Cucumber::Cli::Options::BUILTIN_FORMATS["browserstack_jenkins"] = [
-    "BrowserStackCucumber::JenkinsFormatter",
-    "BrowserStack Jenkins JUnit report formatter"
+Cucumber::Cli::Options::BUILTIN_FORMATS['browserstack_jenkins'] = [
+    'BrowserStackCucumber::JenkinsFormatter',
+    'BrowserStack Jenkins JUnit report formatter'
 ]
 
 

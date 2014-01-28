@@ -1,6 +1,7 @@
-require "cucumber/formatter/junit"
+require 'cucumber/formatter/junit'
 
 module BrowserStackCucumber
+  #noinspection RubyUnusedLocalVariable,RubyUnusedLocalVariable
   class JenkinsFormatter < Cucumber::Formatter::Junit
     def initialize(step_mother, io, options)
       super
@@ -20,7 +21,7 @@ module BrowserStackCucumber
 
     def basename(feature_file)
       filename = super
-      "#{filename}_#{Time.now.strftime("%Y-%m-%d-%H%M%S")}_#{Random.rand(9999).to_s}"
+      "#{filename}_#{Time.now.strftime('%Y-%m-%d-%H%M%S')}_#{Random.rand(9999).to_s}"
     end
 
 

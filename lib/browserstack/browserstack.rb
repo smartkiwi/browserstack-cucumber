@@ -86,6 +86,7 @@ module BrowserStackCucumber
       capabilities['project'] = ENV['JOB_NAME']
       capabilities
     end
+
     def self.url
       'http://hub.browserstack.com/wd/hub'
     end
@@ -111,7 +112,7 @@ module BrowserStackCucumber
           @browser.get @test_url
           raise "Network connection issue. Failed to open #{@test_url} and find '#{@test_substring}' substring" if !@browser.page_source.downcase.include? @test_substring
           @browser
-        rescue =>e
+        rescue => e
           if e.message.include? 'sessions are currently being used. Please upgrade to add more parallel sessions'
             puts "Run out of sessions: '#{e.message}'"
           else
@@ -145,7 +146,7 @@ module BrowserStackCucumber
     def self.session_url
       @session_url = get_session_info(@browser.session_id)
       @session_url['automation_session']['browser_url']
-    rescue =>e
+    rescue => e
       return "failed to obtain session url #{e}"
     end
 
@@ -155,7 +156,7 @@ module BrowserStackCucumber
         puts "no free BrowserStack session available now#{parsed_r}" if (parsed_r['sessions_limit']==parsed_r['running_sessions'])
         parsed_r['sessions_limit']-parsed_r['running_sessions']>0
       end
-    rescue RestClient::Unauthorized=>e
+    rescue RestClient::Unauthorized => e
       puts "Error: Failed to access BrowserStack account, please check username and api key: #{e}"
       raise
     end
@@ -163,19 +164,33 @@ module BrowserStackCucumber
     def self.get_session_limits
       url = "https://#{selenium_username}:#{selenium_apikey}@api.browserstack.com/3/status"
       r = RestClient.get(url)
-      parsed_r = JSON.parse(r.body)
+      JSON.parse(r.body)
     end
 
     def self.call_api(url_part)
       url = "https://#{selenium_username}:#{selenium_apikey}@www.browserstack.com/automate/#{url_part}"
       r = RestClient.get(url)
-      parsed_r = JSON.parse(r.body)
+      JSON.parse(r.body)
     end
+
+    def self.put_api(url_part, payload)
+      url = "https://#{selenium_username}:#{selenium_apikey}@www.browserstack.com/automate/#{url_part}"
+      r = RestClient.put(url, payload.to_json, :content_type => :json)
+      JSON.parse(r.body)
+    end
+
 
     def self.get_session_info(session_id)
       call_api("sessions/#{session_id}.json")
     end
 
+    def self.update_session_status(success)
+      unless success
+        put_api("sessions/#{@last_session_id}.json", {'status' => 'error'})
+      end
+    rescue => e
+      puts e
+    end
 
     def self.browser
       @browser
@@ -199,6 +214,7 @@ module BrowserStackCucumber
 
 
   module_function
+
   def before_hook_impl
     #::Capybara.default_driver = :browser_stack
     #::Capybara.current_driver = :browser_stack
@@ -206,6 +222,7 @@ module BrowserStackCucumber
   end
 
   module_function
+
   def around_hook_impl(scenario, block)
     #::Capybara.current_driver = :browser_stack
 
@@ -236,12 +253,13 @@ module BrowserStackCucumber
     #  job.passed = !scenario.failed?
     #  job.save
     #end
-
+    BrowserStackCucumber::Config.update_session_status(!scenario.failed?)
 
 
   end
 
   module_function
+
   def at_exit_impl
     ::BrowserStackCucumber::Config.close_browser_force
     #do global shutdown (i.e. tunnel)
