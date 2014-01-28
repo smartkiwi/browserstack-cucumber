@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'rest-client'
 require 'json'
-require 'BrowserStack/wait_until'
+require 'browserstack/wait_until.rb'
 
 module BrowserStackCucumber
 

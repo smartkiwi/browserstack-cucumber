@@ -1,4 +1,5 @@
-require 'browsrstack/version'
-require 'browsrstack/browserstack'
+require 'browserstack/version'
+require 'browserstack/browserstack'
+
 
 

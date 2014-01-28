@@ -2,7 +2,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__),'..','..','lib'))
 
 require'rspec/expectations'
 require'page-object'
-require 'BrowserStack/browserstack.rb'
+require'browserstack/browserstack'
 require'selenium/webdriver'
 
 World(PageObject::PageFactory)
