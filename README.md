@@ -49,11 +49,13 @@ end
 ###Running tests:
 
 You'll need to set the following environment variables (the following values are used http://saucelabs.com/rest/v1/info/browsers/webdriver)
-        SELENIUM_PLATFORM (os)
-        SELENIUM_BROWSER (api_name)
-        SELENIUM_VERSION (short_version)
-        BROWSER_STACK_USER_NAME
-        BROWSER_STACK_API_KEY
+ * SELENIUM_PLATFORM (os)
+ * SELENIUM_BROWSER (api_name)
+ * SELENIUM_VERSION (short_version)
+ * BROWSER_STACK_USER_NAME
+ * BROWSER_STACK_API_KEY
+
+To run cucumber tests suite:
 
     $ cucumber SELENIUM_PLATFORM="Windows 2008" SELENIUM_BROWSER="firefox" SELENIUM_VERSION="24" BROWSER_STACK_API_KEY="<your browserstack api key>" BROWSER_STACK_USER_NAME="<browserstack username>"
 
