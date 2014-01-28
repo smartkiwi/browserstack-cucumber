@@ -12,6 +12,8 @@ module BrowserStackCucumber
     @test_substring = 'sign in'
     @browser = nil
 
+    @last_session_id = nil
+
     def test_url=(url)
       @test_url = url
     end
@@ -135,14 +137,21 @@ module BrowserStackCucumber
       #puts my_capabilities['name']
       #puts @browser.session_id
       ENV['browser_session_id'] = @browser.session_id
+      @last_session_id = @browser.session_id
+      ENV['browser_session_url'] = session_url()
       @browser
+    end
+
+    def self.session_url
+      @session_url = get_session_info(@browser.session_id)
+      @session_url['automation_session']['browser_url']
+    rescue =>e
+      return "failed to obtain session url #{e}"
     end
 
     def self.wait_till_session_is_available
       ::BrowserStackCucumber::WaitUntil::wait_until(500) do
-        url = "https://#{selenium_username}:#{selenium_apikey}@api.browserstack.com/3/status"
-        r = RestClient.get(url)
-        parsed_r = JSON.parse(r.body)
+        parsed_r = get_session_limits()
         puts "no free BrowserStack session available now#{parsed_r}" if (parsed_r['sessions_limit']==parsed_r['running_sessions'])
         parsed_r['sessions_limit']-parsed_r['running_sessions']>0
       end
@@ -150,6 +159,23 @@ module BrowserStackCucumber
       puts "Error: Failed to access BrowserStack account, please check username and api key: #{e}"
       raise
     end
+
+    def self.get_session_limits
+      url = "https://#{selenium_username}:#{selenium_apikey}@api.browserstack.com/3/status"
+      r = RestClient.get(url)
+      parsed_r = JSON.parse(r.body)
+    end
+
+    def self.call_api(url_part)
+      url = "https://#{selenium_username}:#{selenium_apikey}@www.browserstack.com/automate/#{url_part}"
+      r = RestClient.get(url)
+      parsed_r = JSON.parse(r.body)
+    end
+
+    def self.get_session_info(session_id)
+      call_api("sessions/#{session_id}.json")
+    end
+
 
     def self.browser
       @browser
