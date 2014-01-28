@@ -2,6 +2,10 @@
 
 A Ruby helper for running tests in BrowserStack Automate browser testing cloud service.
 
+Marks BrowserStack Automate sessions as failed when cucumber scenario fails.
+
+This GEM includes custom Cucumber formatter to generate Junit report files accepted by Jenkins. These Junit reports includes BrowserStack session URL for failed scenarios.
+
 ## Installation
 
 Add this line to your application's Gemfile:
